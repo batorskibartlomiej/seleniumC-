@@ -41,7 +41,7 @@ namespace Selenium_Learning
             //.classname
             //.text-info span:nth-child(1) input
             //XPATH
-            // //tagname[@attrinute='value']- xpath
+            // //tagname[@attrinute='value'][2]- xpath
 
             driver.FindElement(By.XPath("//div[@class='form-group'][5]/label/span/input")).Click();
             driver.FindElement(By.XPath("//input[@id='signInBtn']")).Click();
