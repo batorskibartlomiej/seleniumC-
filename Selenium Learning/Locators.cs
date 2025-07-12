@@ -42,6 +42,9 @@ namespace Selenium_Learning
             //.text-info span:nth-child(1) input
             //XPATH
             // //tagname[@attrinute='value'][2]- xpath
+            //th[aria - label *= fruit]- przykald jesli chcemy wpisac tylko czesc tekstu
+            //th[contains(@aria-label, 'fruit name') - kiedy podajemy niepelny napis
+            //span[text()='Veg/fruit name'] - a tu pelny
 
             driver.FindElement(By.XPath("//div[@class='form-group'][5]/label/span/input")).Click();
             driver.FindElement(By.XPath("//input[@id='signInBtn']")).Click();
