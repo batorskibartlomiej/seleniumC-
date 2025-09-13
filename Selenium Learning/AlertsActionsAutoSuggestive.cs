@@ -34,6 +34,23 @@ namespace Selenium_Learning
 
         }
 
+        [Test]  
+        public void frame()
+
+        {
+            //scroll
+            IWebElement frameScroll = driver.FindElement(By.Id("courses-iframe"));
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("arguments[0].scrollIntoView(true);", frameScroll);
+
+            driver.SwitchTo().Frame("courses-iframe");
+            driver.FindElement(By.LinkText("All Access Plan")).Click();
+
+        }
+
+
+
+
         [Test]
         public void testAlert()
         {
