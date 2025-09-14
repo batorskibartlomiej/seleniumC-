@@ -46,6 +46,17 @@ namespace Selenium_Learning
             driver.SwitchTo().Frame("courses-iframe");
             driver.FindElement(By.LinkText("All Access Plan")).Click();
 
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible
+                (By.XPath("//div[@class='inner-box']/h1")));
+
+            //Thread.Sleep(1000);
+            TestContext.Progress.WriteLine(driver.FindElement(By.XPath("//div[@class='inner-box']/h1")).Text);
+
+            driver.SwitchTo().DefaultContent();
+            TestContext.Progress.WriteLine(driver.FindElement(By.XPath("//h1[1]")).Text);
+
+
         }
 
 
