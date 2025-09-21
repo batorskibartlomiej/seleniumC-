@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpFundas", "CSharpFunda
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selenium Learning", "Selenium Learning\Selenium Learning.csproj", "{8299ED2E-F365-4ABD-AFCA-42512756CC2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSelFramework", "CSharpSelFramework\CSharpSelFramework.csproj", "{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8299ED2E-F365-4ABD-AFCA-42512756CC2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8299ED2E-F365-4ABD-AFCA-42512756CC2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8299ED2E-F365-4ABD-AFCA-42512756CC2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

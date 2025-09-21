@@ -1,45 +1,17 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
-using WebDriverManager.DriverConfigs.Impl;
+
 using OpenQA.Selenium.Support.UI;
+using CSharpSelFramework.utilities;
 
-namespace Selenium_Learning
+namespace CSharpSelFramework
 {
-    public class E2ETest
+    public class EndToEndFlow : Base
     {
-        //IWebDriver driver;
-
-        IWebDriver driver;
-
-
-        [SetUp]
-        public void StartBrowser()
-        {
-            TestContext.Progress.WriteLine("Setup method execution");
-
-            new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
-
-            // Wyłączenie menedżera haseł i komunikatów o wycieku
-            var options = new ChromeOptions();
-            options.AddArgument("--guest");
-
-
-            driver = new ChromeDriver(options);
-            
-
-
-            driver.Manage().Window.Maximize();
-            driver.Url = "https://rahulshettyacademy.com/loginpagePractise/";
-            
-
-            
-
-            
-
-        }
 
         [Test]
-        public void E2Etest()
+        public void EndToEndFlowTest()
         {
 
             String[] expectedProducts = { "iphone X", "Blackberry" };
@@ -58,22 +30,20 @@ namespace Selenium_Learning
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible
                 (By.PartialLinkText("Checkout")));
 
-            IList <IWebElement> products=  driver.FindElements(By.TagName("app-card"));
+            IList<IWebElement> products = driver.FindElements(By.TagName("app-card"));
 
             foreach (IWebElement product in products)
             {
-                
-             if (expectedProducts.Contains(product.FindElement(By.CssSelector(".card-title a")).Text))
+
+                if (expectedProducts.Contains(product.FindElement(By.CssSelector(".card-title a")).Text))
                 {
                     product.FindElement(By.CssSelector(".card-footer button")).Click();
 
                 }
                 TestContext.WriteLine(product.FindElement(By.CssSelector(".card-title a")).Text);
-                
 
             }
-            
-            
+
             driver.FindElement(By.PartialLinkText("Checkout")).Click();
             Thread.Sleep(3000);
 
@@ -87,8 +57,6 @@ namespace Selenium_Learning
 
             driver.FindElement(By.ClassName("btn-success")).Click();
 
-            
-            
             //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("country")));
             driver.FindElement(By.Id("country")).SendKeys("ind");
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.LinkText("India")));
@@ -100,26 +68,19 @@ namespace Selenium_Learning
             string textAfterPurchase = driver.FindElement(By.ClassName("alert-success")).Text;
             string expectedText = " Thank you! Your order will be delivered in next few weeks :-).\r\n        ";
 
-            StringAssert.Contains("Succes", textAfterPurchase); 
-
-
+            StringAssert.Contains("Succes", textAfterPurchase);
 
             //IWebElement checkoutElement = driver.FindElement(By.XPath("//div[@id='navbarResponsive']//a[contains(.,'Checkout(0)')]"));
             ////div[@id="navbarResponsive"]//a[contains(.,"Checkout ( 0 )")]
 
-
         }
 
+        //[TearDown]
+        //public void StopBrowser()
+        //{
+        //    driver.Dispose();
 
-
-
-        [TearDown]
-        public void StopBrowser()
-        {
-            driver.Dispose();
-
-        }
+        //}
     }
-
 
 }
