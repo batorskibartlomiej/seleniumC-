@@ -4,8 +4,9 @@ using OpenQA.Selenium;
 
 using OpenQA.Selenium.Support.UI;
 using CSharpSelFramework.utilities;
+using CSharpSelFramework.pageObjects;
 
-namespace CSharpSelFramework
+namespace CSharpSelFramework.tests
 {
     public class EndToEndFlow : Base
     {
@@ -14,28 +15,25 @@ namespace CSharpSelFramework
         public void EndToEndFlowTest()
         {
 
-            String[] expectedProducts = { "iphone X", "Blackberry" };
-            String[] actualProducts = new string[2];
+            string[] expectedProducts = { "iphone X", "Blackberry" };
+            string[] actualProducts = new string[2];
 
-            IWebElement usernameElement = driver.FindElement(By.Id("username"));
-            usernameElement.SendKeys("rahulshettyacademy");
+            LoginPage loginPage =  new LoginPage(getDriver());
+            
+            ProductsPage productPage = loginPage.validLogin("rahulshettyacademy", "learning");
+            productPage.waitForCheckPageDisplay();
 
-            IWebElement passwordElement = driver.FindElement(By.Id("password"));
-            passwordElement.SendKeys("learning");
 
-            IWebElement signBtnElement = driver.FindElement(By.Id("signInBtn"));
-            signBtnElement.Click();
+            
 
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible
-                (By.PartialLinkText("Checkout")));
+          
 
-            IList<IWebElement> products = driver.FindElements(By.TagName("app-card"));
+            IList<IWebElement> products = productPage.getCards();
 
             foreach (IWebElement product in products)
             {
 
-                if (expectedProducts.Contains(product.FindElement(By.CssSelector(".card-title a")).Text))
+                if (expectedProducts.Contains(product.FindElement(productPage.getCardTitle()).Text))
                 {
                     product.FindElement(By.CssSelector(".card-footer button")).Click();
 
@@ -56,8 +54,8 @@ namespace CSharpSelFramework
             Assert.AreEqual(expectedProducts, actualProducts);
 
             driver.FindElement(By.ClassName("btn-success")).Click();
-
-            //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("country")));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("country")));
             driver.FindElement(By.Id("country")).SendKeys("ind");
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.LinkText("India")));
             driver.FindElement(By.LinkText("India")).Click();

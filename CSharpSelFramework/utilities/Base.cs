@@ -36,6 +36,11 @@ namespace CSharpSelFramework.utilities
 
         }
 
+        public IWebDriver getDriver()
+        {
+            return driver;  
+        }
+
         public void InitBrowser(string browserName)
         {
             switch (browserName)
@@ -74,6 +79,7 @@ namespace CSharpSelFramework.utilities
             [TearDown]
             public void AfterTest()
             {
+                driver.Dispose();
                 driver.Quit();
 
             }
