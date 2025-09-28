@@ -14,13 +14,16 @@ namespace CSharpSelFramework.pageObjects
     {
         private IWebDriver driver;
         By cardTitle = By.CssSelector(".card-title a");
+        By addToCart = By.CssSelector(".card-footer button");//tu dodajemy lokatory
 
 
         //WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
         //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible
-                //(By.PartialLinkText("Checkout")));
+        //(By.PartialLinkText("Checkout")));
 
-            //IList<IWebElement> products = driver.FindElements(By.TagName("app-card"));
+        //IList<IWebElement> products = driver.FindElements(By.TagName("app-card"));
+        //By.CssSelector(".card-footer button"))
+        //By.PartialLinkText("Checkout")
         public ProductsPage(IWebDriver driver) 
         {
             this.driver = driver;  
@@ -36,10 +39,28 @@ namespace CSharpSelFramework.pageObjects
             return cards;
         }
 
+
+
+        [FindsBy(How = How.PartialLinkText, Using = "Checkout")]
+        private IWebElement checkoutButton;
+
+        public CheckoutPage chekout()
+        {
+            checkoutButton.Click();
+            return new CheckoutPage(driver);
+        }
+
         public By getCardTitle()//by-> locator not I web element
         {
             return cardTitle;
         }
+
+        public By addToCartButton()//by-> locator not I web element
+        {
+            return addToCart;
+        }
+
+
 
         public void waitForCheckPageDisplay()
         {

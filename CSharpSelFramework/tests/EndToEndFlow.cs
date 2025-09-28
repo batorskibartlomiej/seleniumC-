@@ -35,17 +35,18 @@ namespace CSharpSelFramework.tests
 
                 if (expectedProducts.Contains(product.FindElement(productPage.getCardTitle()).Text))
                 {
-                    product.FindElement(By.CssSelector(".card-footer button")).Click();
+                    product.FindElement(productPage.addToCartButton()).Click();
 
                 }
-                TestContext.WriteLine(product.FindElement(By.CssSelector(".card-title a")).Text);
+                TestContext.WriteLine(product.FindElement(productPage.getCardTitle()).Text);
 
             }
 
-            driver.FindElement(By.PartialLinkText("Checkout")).Click();
+            CheckoutPage checkoutPage = productPage.chekout();
+           
             Thread.Sleep(3000);
 
-            IList<IWebElement> checkoutcards = driver.FindElements(By.XPath("//h4/a"));
+            IList<IWebElement> checkoutcards = checkoutPage.getCards();
             for (int i = 0; i < checkoutcards.Count; i++)
             {
                 actualProducts[i] = checkoutcards[i].Text;
@@ -53,17 +54,22 @@ namespace CSharpSelFramework.tests
             }
             Assert.AreEqual(expectedProducts, actualProducts);
 
-            driver.FindElement(By.ClassName("btn-success")).Click();
+            DeliveryPage deliveryPage = checkoutPage.checkout();
+
+           
+
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("country")));
-            driver.FindElement(By.Id("country")).SendKeys("ind");
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.LinkText("India")));
-            driver.FindElement(By.LinkText("India")).Click();
+            //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("country")));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(deliveryPage.getCountry()));
+            driver.FindElement(deliveryPage.getCountry()).SendKeys("ind");
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(deliveryPage.getCountryText()));
+            driver.FindElement(deliveryPage.getCountryText()).Click();
 
-            driver.FindElement(By.XPath("//label[@for='checkbox2']")).Click();
-            driver.FindElement(By.XPath("//input[@type='submit']")).Click();
+            deliveryPage.clickChekbox();
+            deliveryPage.clickSubmit();
 
-            string textAfterPurchase = driver.FindElement(By.ClassName("alert-success")).Text;
+            //string textAfterPurchase = driver.FindElement(By.ClassName("alert-success")).Text;
+            string textAfterPurchase = deliveryPage.getAlertText();
             string expectedText = " Thank you! Your order will be delivered in next few weeks :-).\r\n        ";
 
             StringAssert.Contains("Succes", textAfterPurchase);
