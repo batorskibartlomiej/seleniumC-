@@ -73,6 +73,11 @@ namespace CSharpSelFramework.utilities
 
             }
         }
+            public static JsonReader getDataParser()
+        {
+            return new JsonReader();
+        }
+
 
 
 

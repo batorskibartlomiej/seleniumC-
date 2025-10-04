@@ -11,16 +11,18 @@ namespace CSharpSelFramework.tests
     public class EndToEndFlow : Base
     {
 
-        [Test]
-        public void EndToEndFlowTest()
+        [Test, TestCaseSource("AddTestDataConfig")]
+        //[TestCase("rahulshettyacademy", "learning")]
+        //[TestCaseSource("AddTestDataConfig")]
+        public void EndToEndFlowTest(String username, String password, String[] expectedProducts)
         {
 
-            string[] expectedProducts = { "iphone X", "Blackberry" };
+            //string[] expectedProducts = { "iphone X", "Blackberry" };
             string[] actualProducts = new string[2];
 
             LoginPage loginPage =  new LoginPage(getDriver());
-            
-            ProductsPage productPage = loginPage.validLogin("rahulshettyacademy", "learning");
+
+            ProductsPage productPage = loginPage.validLogin(username, password);
             productPage.waitForCheckPageDisplay();
 
 
@@ -44,7 +46,7 @@ namespace CSharpSelFramework.tests
 
             CheckoutPage checkoutPage = productPage.chekout();
            
-            Thread.Sleep(3000);
+            
 
             IList<IWebElement> checkoutcards = checkoutPage.getCards();
             for (int i = 0; i < checkoutcards.Count; i++)
@@ -77,6 +79,14 @@ namespace CSharpSelFramework.tests
             //IWebElement checkoutElement = driver.FindElement(By.XPath("//div[@id='navbarResponsive']//a[contains(.,'Checkout(0)')]"));
             ////div[@id="navbarResponsive"]//a[contains(.,"Checkout ( 0 )")]
 
+        }
+
+        public static IEnumerable<TestCaseData> AddTestDataConfig()
+        {
+
+            yield return new TestCaseData(getDataParser().extractData("username"), getDataParser().extractData("password"), getDataParser().extractDataArray("products"));
+            yield return new TestCaseData(getDataParser().extractData("username_wrong"), getDataParser().extractData("password_wrong"), getDataParser().extractDataArray("products"));
+            //yield return new TestCaseData("rahulshetty", "learning");
         }
 
         //[TearDown]
