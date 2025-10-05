@@ -14,6 +14,7 @@ using WebDriverManager.DriverConfigs.Impl;
 
 namespace Selenium_Learning
 {
+    [Parallelizable(ParallelScope.Self)]
     public class SortWebTables : Base
     {
 
@@ -25,11 +26,11 @@ namespace Selenium_Learning
             ArrayList a = new ArrayList();
             
 
-            SelectElement dropdwon = new SelectElement(driver.FindElement(By.Id("page-menu")));
+            SelectElement dropdwon = new SelectElement(driver.Value.FindElement(By.Id("page-menu")));
             dropdwon.SelectByValue("20");
 
             //step1- get all veggie names into arraylist A
-            IList <IWebElement> veggies = driver.FindElements(By.XPath("//td[1]"));
+            IList <IWebElement> veggies = driver.Value.FindElements(By.XPath("//td[1]"));
 
             foreach (IWebElement element in veggies)
             {
@@ -55,7 +56,7 @@ namespace Selenium_Learning
             }
             //step3 - go and click column
 
-            driver.FindElement(By.XPath("//span[text()='Veg/fruit name']")).Click();
+            driver.Value.FindElement(By.XPath("//span[text()='Veg/fruit name']")).Click();
 
             //th[aria - label *= fruit]- przykald jesli chcemy wpisac tylko czesc tekstu
             //th[contains(@aria-label, 'fruit name') 
@@ -68,7 +69,7 @@ namespace Selenium_Learning
 
             ArrayList b = new ArrayList();
 
-            IList<IWebElement> veggiesAfterSorting = driver.FindElements(By.XPath("//td[1]"));
+            IList<IWebElement> veggiesAfterSorting = driver.Value.FindElements(By.XPath("//td[1]"));
 
             foreach(IWebElement element in veggiesAfterSorting)
             {

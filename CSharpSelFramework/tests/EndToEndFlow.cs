@@ -6,14 +6,22 @@ using OpenQA.Selenium.Support.UI;
 using CSharpSelFramework.utilities;
 using CSharpSelFramework.pageObjects;
 
-namespace CSharpSelFramework.tests
+namespace Selenium_Learning
 {
+    [Parallelizable(ParallelScope.Self)] // run all test files inm project parallel
+    //[Parallelizable(ParallelScope.Children)]//run all test methods in one calss parallel
     public class EndToEndFlow : Base
     {
 
         [Test, TestCaseSource("AddTestDataConfig")]
         //[TestCase("rahulshettyacademy", "learning")]
         //[TestCaseSource("AddTestDataConfig")]
+
+        
+        
+        // run all test files inm project parallel
+       [Parallelizable(ParallelScope.All)]//run all data sets of Test method in parallel
+
         public void EndToEndFlowTest(String username, String password, String[] expectedProducts)
         {
 
@@ -60,41 +68,81 @@ namespace CSharpSelFramework.tests
 
            
 
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
-            //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("country")));
+            WebDriverWait wait = new WebDriverWait(driver.Value, TimeSpan.FromSeconds(8));
+           
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(deliveryPage.getCountry()));
-            driver.FindElement(deliveryPage.getCountry()).SendKeys("ind");
+            driver.Value.FindElement(deliveryPage.getCountry()).SendKeys("ind");
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(deliveryPage.getCountryText()));
-            driver.FindElement(deliveryPage.getCountryText()).Click();
+            driver.Value.FindElement(deliveryPage.getCountryText()).Click();
 
             deliveryPage.clickChekbox();
             deliveryPage.clickSubmit();
 
-            //string textAfterPurchase = driver.FindElement(By.ClassName("alert-success")).Text;
+            
             string textAfterPurchase = deliveryPage.getAlertText();
             string expectedText = " Thank you! Your order will be delivered in next few weeks :-).\r\n        ";
 
             StringAssert.Contains("Succes", textAfterPurchase);
 
-            //IWebElement checkoutElement = driver.FindElement(By.XPath("//div[@id='navbarResponsive']//a[contains(.,'Checkout(0)')]"));
-            ////div[@id="navbarResponsive"]//a[contains(.,"Checkout ( 0 )")]
+            
 
         }
+
+
+        [Test]
+        public void LocatorsIdentification()
+        {
+
+            driver.Value.FindElement(By.Id("username")).SendKeys("rahulshettyacademy");
+
+
+
+            driver.Value.FindElement(By.Name("password")).SendKeys("123456");
+            //tagname[attrinute='value']-css
+            // #id
+            //.classname
+            //.text-info span:nth-child(1) input
+            //XPATH
+            // //tagname[@attrinute='value'][2]- xpath
+            //th[aria - label *= fruit]- przykald jesli chcemy wpisac tylko czesc tekstu
+            //th[contains(@aria-label, 'fruit name') - kiedy podajemy niepelny napis
+            //span[text()='Veg/fruit name'] - a tu pelny
+
+            driver.Value.FindElement(By.XPath("//div[@class='form-group'][5]/label/span/input")).Click();
+            driver.Value.FindElement(By.XPath("//input[@id='signInBtn']")).Click();
+            //driver.FindElement(By.XPath("//input[@id='signInBtn']")).Click;
+            //signBtnElement.Click();
+            //8
+
+            WebDriverWait wait = new WebDriverWait(driver.Value, TimeSpan.FromSeconds(5));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions
+                .TextToBePresentInElementValue(By.XPath("//input[@id='signInBtn']"), "Sign In"));
+            String errorMsg = driver.Value.FindElement(By.XPath("//div[@class='alert alert-danger col-md-12']")).Text;
+
+            TestContext.Progress.WriteLine(errorMsg);
+            //Assert.That(errorMsg.Equals("Incorrect username/password."), Is.True);
+
+            
+
+
+
+        }
+
+
+
+
+
+
 
         public static IEnumerable<TestCaseData> AddTestDataConfig()
         {
 
             yield return new TestCaseData(getDataParser().extractData("username"), getDataParser().extractData("password"), getDataParser().extractDataArray("products"));
             yield return new TestCaseData(getDataParser().extractData("username_wrong"), getDataParser().extractData("password_wrong"), getDataParser().extractDataArray("products"));
-            //yield return new TestCaseData("rahulshetty", "learning");
+            
         }
 
-        //[TearDown]
-        //public void StopBrowser()
-        //{
-        //    driver.Dispose();
-
-        //}
+        
     }
 
 }

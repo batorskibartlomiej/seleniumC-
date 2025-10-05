@@ -5,6 +5,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using System.Configuration;
+using System.Threading;
 using WebDriverManager.DriverConfigs.Impl;
 
 namespace CSharpSelFramework.utilities
@@ -12,9 +13,10 @@ namespace CSharpSelFramework.utilities
     public class Base
     {
 
-        public IWebDriver driver;
+        //public IWebDriver driver;
+        public ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>();
 
-
+        //[OneTimeSetUp]
         [SetUp]
         public void StartBrowser()
         {
@@ -25,20 +27,20 @@ namespace CSharpSelFramework.utilities
 
 
             //new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            driver.Value.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             //// Wyłączenie menedżera haseł i komunikatów o wycieku
             //var options = new ChromeOptions();
             //options.AddArgument("--guest");
             // driver = new ChromeDriver(options);
 
-            driver.Manage().Window.Maximize();
-            driver.Url = "https://rahulshettyacademy.com/loginpagePractise/";
+            driver.Value.Manage().Window.Maximize();
+            driver.Value.Url = "https://rahulshettyacademy.com/loginpagePractise/";
 
         }
 
         public IWebDriver getDriver()
         {
-            return driver;  
+            return driver.Value;
         }
 
         public void InitBrowser(string browserName)
@@ -51,7 +53,7 @@ namespace CSharpSelFramework.utilities
                     // Wyłączenie menedżera haseł i komunikatów o wycieku
                     var options = new FirefoxOptions();
                     options.AddArgument("--guest");
-                    driver = new FirefoxDriver(options);
+                    driver.Value = new FirefoxDriver(options);
                     break;
                 case "Chrome":
 
@@ -59,7 +61,7 @@ namespace CSharpSelFramework.utilities
                     // Wyłączenie menedżera haseł i komunikatów o wycieku
                     var options1 = new ChromeOptions();
                     options1.AddArgument("--guest");
-                    driver = new ChromeDriver(options1);
+                    driver.Value = new ChromeDriver(options1);
                     break;
                 case "Edge":
 
@@ -67,28 +69,42 @@ namespace CSharpSelFramework.utilities
                     // Wyłączenie menedżera haseł i komunikatów o wycieku
                     var options2 = new EdgeOptions();
                     options2.AddArgument("--guest");
-                    driver = new EdgeDriver(options2);
+                    driver.Value = new EdgeDriver(options2);
                     break;
 
 
             }
         }
-            public static JsonReader getDataParser()
+        public static JsonReader getDataParser()
         {
             return new JsonReader();
         }
 
 
 
+        //[OneTimeTearDown]
+        [TearDown]
+        public void AfterTest()
+        {
 
-            [TearDown]
-            public void AfterTest()
             {
-                driver.Dispose();
-                driver.Quit();
+                try
+                {
+                    if (driver.Value != null)
+                    {
+                        driver.Value.Quit();      // <-- zamyka przeglądarkę
+                        driver.Value.Dispose();   // <-- zwalnia zasoby po zamknięciu
+                        driver.Value = null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    TestContext.WriteLine("Błąd przy zamykaniu przeglądarki: " + e.Message);
+                }
 
             }
 
 
         }
+    }
     } 

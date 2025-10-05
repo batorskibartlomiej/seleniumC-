@@ -11,6 +11,7 @@ using WebDriverManager.DriverConfigs.Impl;
 
 namespace Selenium_Learning
 {
+    [Parallelizable(ParallelScope.Self)]
     internal class WindowHandlers: Base
     {
 
@@ -20,18 +21,18 @@ namespace Selenium_Learning
         public void WindowHandle()
         {
             String email= "mentor@rahulshettyacademy.com";
-            string parentWindowId = driver.CurrentWindowHandle;
+            string parentWindowId = driver.Value.CurrentWindowHandle;
 
-            driver.FindElement(By.LinkText("Free Access to InterviewQues/ResumeAssistance/Material")).Click();
+            driver.Value.FindElement(By.LinkText("Free Access to InterviewQues/ResumeAssistance/Material")).Click();
             
 
-            Assert.AreEqual(2, driver.WindowHandles.Count);
-            String childWindowName = driver.WindowHandles[1];
-            driver.SwitchTo().Window(childWindowName);
+            Assert.AreEqual(2, driver.Value.WindowHandles.Count);
+            String childWindowName = driver.Value.WindowHandles[1];
+            driver.Value.SwitchTo().Window(childWindowName);
 
-             TestContext.Progress.WriteLine(driver.FindElement(By.ClassName("red")).Text);
+             TestContext.Progress.WriteLine(driver.Value.FindElement(By.ClassName("red")).Text);
 
-            string text = driver.FindElement(By.ClassName("red")).Text;
+            string text = driver.Value.FindElement(By.ClassName("red")).Text;
             //Please email us at mentor@rahulshettyacademy.com with below template to receive response
             string[] splittedText = text.Split("at");
             // mentor@rahulshettyacademy.com with below template to receive response
@@ -39,9 +40,9 @@ namespace Selenium_Learning
 
             Assert.AreEqual(email, trimmedString[0]);
 
-            driver.SwitchTo().Window(parentWindowId);
+            driver.Value.SwitchTo().Window(parentWindowId);
 
-            driver.FindElement(By.Id("username")).SendKeys(trimmedString[0]);
+            driver.Value.FindElement(By.Id("username")).SendKeys(trimmedString[0]);
             Thread.Sleep(5000);
 
 
