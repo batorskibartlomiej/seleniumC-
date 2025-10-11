@@ -1,4 +1,5 @@
 ﻿
+//#pragma warning disable NUnit1032
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -13,8 +14,9 @@ namespace CSharpSelFramework.utilities
     public class Base
     {
 
+        String browserName;
         //public IWebDriver driver;
-        public ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>();
+        public static ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>();
 
         //[OneTimeSetUp]
         [SetUp]
@@ -22,8 +24,15 @@ namespace CSharpSelFramework.utilities
         {
             TestContext.Progress.WriteLine("Setup method execution");
             //configuration
-            string browsername = ConfigurationManager.AppSettings["browser"];
-            InitBrowser(browsername);
+            //cmd /c "dotnet test CSharpSelFramework.csproj --filter ""TestCategory=Smoke"" -- TestRunParameters.Parameter(name=""browserName"",value=""Firefox"")"
+            //jesli chcemy uruchomic z lini komend musi byc cmd bo powershell zle interpretuje nawiasy
+            browserName = TestContext.Parameters["browserName"];
+            if(browserName == null)
+            { 
+                browserName = ConfigurationManager.AppSettings["browser"];
+            }
+            
+            InitBrowser(browserName);
 
 
             //new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
@@ -87,24 +96,22 @@ namespace CSharpSelFramework.utilities
         public void AfterTest()
         {
 
-            {
-                try
-                {
-                    if (driver.Value != null)
-                    {
-                        driver.Value.Quit();      // <-- zamyka przeglądarkę
+            
                         driver.Value.Dispose();   // <-- zwalnia zasoby po zamknięciu
-                        driver.Value = null;
-                    }
-                }
-                catch (Exception e)
-                {
-                    TestContext.WriteLine("Błąd przy zamykaniu przeglądarki: " + e.Message);
-                }
-
-            }
+                 
+                
 
 
         }
+
+        //[OneTimeTearDown]
+        //public void DisposeThreadLocal()
+        //{
+        //    if (driver != null)
+        //    {
+        //        driver.Value.Dispose(); // zwalnia sam ThreadLocal
+        //    }
+        //}
     }
-    } 
+}
+    

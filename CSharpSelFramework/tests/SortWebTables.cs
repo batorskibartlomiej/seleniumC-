@@ -15,10 +15,22 @@ using WebDriverManager.DriverConfigs.Impl;
 namespace Selenium_Learning
 {
     [Parallelizable(ParallelScope.Self)]
-    public class SortWebTables : Base
+    public class SortWebTables 
     {
+        IWebDriver driver;
 
-        
+        [SetUp]
+        public void StartBrowser()
+        {
+            new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+            driver = new ChromeDriver();
+
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+
+            driver.Manage().Window.Maximize();
+            driver.Url = "https://rahulshettyacademy.com/seleniumPractise/#/offers";
+
+        }
 
         [Test]
         public void SortTable()
@@ -26,11 +38,11 @@ namespace Selenium_Learning
             ArrayList a = new ArrayList();
             
 
-            SelectElement dropdwon = new SelectElement(driver.Value.FindElement(By.Id("page-menu")));
+            SelectElement dropdwon = new SelectElement(driver.FindElement(By.Id("page-menu")));
             dropdwon.SelectByValue("20");
 
             //step1- get all veggie names into arraylist A
-            IList <IWebElement> veggies = driver.Value.FindElements(By.XPath("//td[1]"));
+            IList <IWebElement> veggies = driver.FindElements(By.XPath("//td[1]"));
 
             foreach (IWebElement element in veggies)
             {
@@ -56,7 +68,7 @@ namespace Selenium_Learning
             }
             //step3 - go and click column
 
-            driver.Value.FindElement(By.XPath("//span[text()='Veg/fruit name']")).Click();
+            driver.FindElement(By.XPath("//span[text()='Veg/fruit name']")).Click();
 
             //th[aria - label *= fruit]- przykald jesli chcemy wpisac tylko czesc tekstu
             //th[contains(@aria-label, 'fruit name') 
@@ -69,7 +81,7 @@ namespace Selenium_Learning
 
             ArrayList b = new ArrayList();
 
-            IList<IWebElement> veggiesAfterSorting = driver.Value.FindElements(By.XPath("//td[1]"));
+            IList<IWebElement> veggiesAfterSorting = driver.FindElements(By.XPath("//td[1]"));
 
             foreach(IWebElement element in veggiesAfterSorting)
             {
@@ -82,6 +94,13 @@ namespace Selenium_Learning
             Assert.AreEqual(a, b);
 
 
+        }
+
+
+        [TearDown]
+        public void StopBrowser()
+        {
+            driver.Dispose();
         }
 
 

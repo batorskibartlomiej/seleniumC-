@@ -1,0 +1,9 @@
+﻿root = true
+
+[*.cs]
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+
+# Wyłączenie ostrzeżenia NUnit1032
+dotnet_diagnostic.NUnit1032.severity = none

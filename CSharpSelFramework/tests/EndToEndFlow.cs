@@ -13,7 +13,7 @@ namespace Selenium_Learning
     public class EndToEndFlow : Base
     {
 
-        [Test, TestCaseSource("AddTestDataConfig")]
+        [Test, TestCaseSource("AddTestDataConfig"), Category("Regression")]
         //[TestCase("rahulshettyacademy", "learning")]
         //[TestCaseSource("AddTestDataConfig")]
 
@@ -21,7 +21,10 @@ namespace Selenium_Learning
         
         // run all test files inm project parallel
        [Parallelizable(ParallelScope.All)]//run all data sets of Test method in parallel
-
+       //dotnet test pathto.csproj (alltest) from temrinal
+       //dotnet test CsharpSelFramework.csproj --filter TestCategory=Smoke //jesli dana kategoria
+       //cmd /c "dotnet test CSharpSelFramework.csproj --filter ""TestCategory=Smoke"" -- TestRunParameters.Parameter(name=""browserName"",value=""Firefox"")"
+       //jesli chcemy uruchomic z lini komend musi byc cmd bo powershell zle interpretuje nawiasy
         public void EndToEndFlowTest(String username, String password, String[] expectedProducts)
         {
 
@@ -89,7 +92,7 @@ namespace Selenium_Learning
         }
 
 
-        [Test]
+        [Test, Category("Smoke")]
         public void LocatorsIdentification()
         {
 
