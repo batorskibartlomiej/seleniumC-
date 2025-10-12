@@ -1,13 +1,19 @@
 ﻿
 //#pragma warning disable NUnit1032
 
+using AventStack.ExtentReports;
+using AventStack.ExtentReports.Reporter;
+using NUnit.Framework.Interfaces;
+
+//using ICSharpCode.SharpZipLib.Zip;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.DevTools.V137.Page;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using System.Configuration;
-using System.Threading;
 using WebDriverManager.DriverConfigs.Impl;
+
 
 namespace CSharpSelFramework.utilities
 {
@@ -15,6 +21,24 @@ namespace CSharpSelFramework.utilities
     {
 
         String browserName;
+        public ExtentReports extent;//main report
+        public ExtentTest test;//test report
+        //report file
+        [OneTimeSetUp]
+        public void Setup()
+        {   
+            string workingDirectory = Environment.CurrentDirectory;
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            String reportPath = projectDirectory + "//index.html";
+            var htmlReporter = new ExtentSparkReporter(reportPath);
+            extent = new ExtentReports();
+            extent.AttachReporter(htmlReporter);
+            extent.AddSystemInfo("Host Name", "Local host");
+            extent.AddSystemInfo("Environment", "QA");
+            extent.AddSystemInfo("Username", "Bartek");
+
+        }
+
         //public IWebDriver driver;
         public static ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>();
 
@@ -22,6 +46,7 @@ namespace CSharpSelFramework.utilities
         [SetUp]
         public void StartBrowser()
         {
+            test = extent.CreateTest(TestContext.CurrentContext.Test.Name);//entry do raportow 
             TestContext.Progress.WriteLine("Setup method execution");
             //configuration
             //cmd /c "dotnet test CSharpSelFramework.csproj --filter ""TestCategory=Smoke"" -- TestRunParameters.Parameter(name=""browserName"",value=""Firefox"")"
@@ -91,27 +116,48 @@ namespace CSharpSelFramework.utilities
 
 
 
-        //[OneTimeTearDown]
+       
+
+
         [TearDown]
         public void AfterTest()
         {
+            var status = TestContext.CurrentContext.Result.Outcome.Status;
+            var stackTrace = TestContext.CurrentContext.Result.StackTrace;
 
-            
-                        driver.Value.Dispose();   // <-- zwalnia zasoby po zamknięciu
-                 
-                
+            if (status == TestStatus.Failed)
+            {
+                string screenshotBase64 = CaptureScreenshot(driver.Value);
+                test.Fail("❌ Test failed: " + TestContext.CurrentContext.Result.Message)
+                    .AddScreenCaptureFromBase64String(screenshotBase64, "Screenshot on Failure");
 
+                if (stackTrace != null)
+                    test.Log(Status.Fail, "StackTrace:\n" + stackTrace);
+            }
+            else if (status == TestStatus.Passed)
+            {
+                test.Pass("✅ Test passed successfully");
+            }
+            else if (status == TestStatus.Skipped)
+            {
+                test.Skip("⚠️ Test skipped");
+            }
 
+            driver.Value.Quit();
+            extent.Flush();
+
+            TestContext.Progress.WriteLine("🧹 Browser closed and report updated.");
         }
 
-        //[OneTimeTearDown]
-        //public void DisposeThreadLocal()
-        //{
-        //    if (driver != null)
-        //    {
-        //        driver.Value.Dispose(); // zwalnia sam ThreadLocal
-        //    }
-        //}
+        private string CaptureScreenshot(IWebDriver driver)
+        {
+            ITakesScreenshot ts = (ITakesScreenshot)driver;
+            OpenQA.Selenium.Screenshot screenshot = ts.GetScreenshot();
+            return screenshot.AsBase64EncodedString;
+        }
+
+
+
     }
 }
     
