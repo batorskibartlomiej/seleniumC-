@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using System;
 using System.Collections.Generic;
@@ -11,67 +12,77 @@ namespace CSharpSelFramework.pageObjects
     public class DeliveryPage
     {
         private IWebDriver driver;
-        //By.Id("country")
-        //By.LinkText("India")
-        //By.XPath("//label[@for='checkbox2']") driver find by czyli Iweb Element
-        //By.XPath("//input[@type='submit']")
-        //(By.ClassName("alert-success"))
-        By country = By.Id("country");
-        By countryText = By.LinkText("India");
+        private readonly WebDriverWait wait;
+        
 
 
-        public DeliveryPage(IWebDriver driver) 
+        private By country = By.Id("country");
+        private By countryText = By.LinkText("India");
+        private By checkbox = By.XPath("//label[@for='checkbox2']");
+        private By submitBtn = By.XPath("//input[@type='submit']");
+        private By alertText = By.ClassName("alert-success");
+
+
+        public DeliveryPage(IWebDriver driver, int waitSeconds = 10) 
         { 
             this.driver = driver;
-            PageFactory.InitElements(driver,this);
+            //PageFactory.InitElements(driver,this);
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(waitSeconds));
+
+        }
+
+        public IWebElement GetCountryElement()
+        {
+
+
+            return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(country));
+        }
+
+        public IWebElement GetCountryText()
+        {
+            return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(countryText));
+
+        }
+
+
+
+
+
+        public void EnterCountry(string countryName)//metoda void wykonuje akcje a Iwebelement zwracaElement na ktorym mozna cos dzialac lub sprawdzenie w tescie
+        {
+            var element = GetCountryElement();
+            element.Clear();
+            element.SendKeys(countryName);
+        }
+
         
-        }
 
-        public void getCountry1()
-        {
-            driver.FindElement(country);
-        }
-
-        public By getCountry()
-        {
-            return country;
-
-        }
-
-        public By getCountryText()
-        {
-            return countryText;
-
-        }
-
-        [FindsBy(How = How.XPath, Using = "//label[@for='checkbox2']")]
-        private IWebElement checkbox;
        
-        public void clickChekbox()
+
+        public void ClickCheckbox()
         {
-            checkbox.Click();
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(checkbox)).Click();
+        }
+
+
+        public void ClickSubmit()
+        {
+            driver.FindElement(submitBtn).Click();  
+        }
+
+        public string GetAlertMessage()
+        {
+
+            return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(alertText)).Text;
             
         }
 
-        [FindsBy(How = How.XPath, Using = "//input[@type='submit']")]
-        private IWebElement submitBtn;
 
-        public void clickSubmit()
-        {
-            submitBtn.Click();
-
-        }
-
-        [FindsBy(How = How.ClassName, Using = "alert-success")]
-        private IWebElement allertText;
-
-        public string getAlertText()
-        {
-            return allertText.Text;
-
-        }
+       
 
 
+
+      
 
 
 

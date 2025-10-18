@@ -71,18 +71,20 @@ namespace Selenium_Learning
 
            
 
-            WebDriverWait wait = new WebDriverWait(driver.Value, TimeSpan.FromSeconds(8));
-           
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(deliveryPage.getCountry()));
-            driver.Value.FindElement(deliveryPage.getCountry()).SendKeys("ind");
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(deliveryPage.getCountryText()));
-            driver.Value.FindElement(deliveryPage.getCountryText()).Click();
-
-            deliveryPage.clickChekbox();
-            deliveryPage.clickSubmit();
+           // WebDriverWait wait = new WebDriverWait(driver.Value, TimeSpan.FromSeconds(8));
 
             
-            string textAfterPurchase = deliveryPage.getAlertText();
+            deliveryPage.EnterCountry("ind");
+            
+            deliveryPage.GetCountryText().Click();
+
+            deliveryPage.ClickCheckbox();
+            deliveryPage.ClickSubmit();
+
+
+            string textAfterPurchase = deliveryPage.GetAlertMessage();
+
+
             string expectedText = " Thank you! Your order will be delivered in next few weeks :-).\r\n        ";
 
             StringAssert.Contains("Succes", textAfterPurchase);
