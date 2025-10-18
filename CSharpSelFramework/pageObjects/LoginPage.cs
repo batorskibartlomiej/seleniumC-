@@ -1,69 +1,70 @@
 ﻿using OpenQA.Selenium;
-using SeleniumExtras.PageObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenQA.Selenium.Support.UI;
+//using SeleniumExtras.PageObjects;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
 namespace CSharpSelFramework.pageObjects
 {
     public class LoginPage
     {
-        //IWebElement passwordElement = driver.FindElement(By.Id("password"));
-        //driver.FindElement(By.xpath("//label[@for='terms']//input[@id='terms']").click();
-        //IWebElement signBtnElement = driver.FindElement(By.Id("signInBtn"));
+        
 
         private IWebDriver driver;
-        public LoginPage(IWebDriver driver)
+        private WebDriverWait wait;
+
+
+        private By username = By.Id("username");
+        private By checkbox = By.XPath("//label[@for='terms']//input[@id='terms']");
+        private By password = By.Id("password");
+        private By signInBtn = By.Id("signInBtn");
+
+
+
+
+        public LoginPage(IWebDriver driver, int waitSecond = 10 )
         {
             this.driver = driver;
-            PageFactory.InitElements(driver, this);
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(waitSecond));
+
         }
 
 
-
-        //Pageobject factory
-        [FindsBy(How = How.Id, Using = "username")]
-        private IWebElement username;
-
-        [FindsBy(How = How.XPath, Using = "//label[@for='terms']//input[@id='terms']")]
-        private IWebElement checkbox;
-
-        [FindsBy(How = How.Id, Using = "password")]
-        private IWebElement password;
-
-        [FindsBy(How = How.Id, Using = "signInBtn")]
-        private IWebElement signInBtn;
-
-        public ProductsPage validLogin(string user, string pass)
+        public IWebElement GetUserName()
         {
-            username.SendKeys(user);
-            password.SendKeys(pass);
-            checkbox.Click();
-            signInBtn.Click();
+            return driver.FindElement(username);
+        }
+
+        public IWebElement GetPassword()
+        {
+            return driver.FindElement(password);
+        }
+
+        public void ClickCheckbox()
+        {
+            //driver.FindElement(checkbox).Click();
+
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(checkbox)).Click();
+        }
+
+        public void ClickSignInBtn()
+        {
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(signInBtn)).Click();
+        }
+
+
+        public ProductsPage ValidLogin(string user, string pass)
+        {
+            GetUserName().SendKeys(user);
+            GetPassword().SendKeys(pass);
+            ClickCheckbox();
+            ClickSignInBtn();
             return new ProductsPage(driver);
         }
 
-        public IWebElement getUserName()
-        {
-            return username;
-        }
-
-        public IWebElement getCheckbox()
-        {
-            return checkbox;
-        }
-
-        public IWebElement getPassword()
-        {
-            return password;
-        }
-
-        public IWebElement getSignInBtn()
-        {
-            return signInBtn;
-        }
 
     }
 

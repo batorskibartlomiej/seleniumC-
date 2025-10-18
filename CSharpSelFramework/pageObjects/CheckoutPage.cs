@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using System;
 using System.Collections.Generic;
@@ -12,35 +13,42 @@ namespace CSharpSelFramework.pageObjects
     {
 
         private IWebDriver driver;
+        private WebDriverWait wait;
 
 
-        //IList<IWebElement> checkoutcards = driver.FindElements(By.XPath("//h4/a"));
-        //driver.FindElement(By.ClassName("btn-success")).Click();
+        By checkoutCards = By.XPath("//h4/a");
+        By checkoutBtn = By.ClassName("btn-success");
 
-        public CheckoutPage(IWebDriver driver) 
+        
+
+        public CheckoutPage(IWebDriver driver, int waitSecond = 10) 
         {
             this.driver = driver;
-            PageFactory.InitElements(driver, this);
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(waitSecond)); 
         }
 
-        [FindsBy(How = How.XPath, Using = "//h4/a")]
-        private IList<IWebElement> checkoutCards;
-
-        public IList<IWebElement> getCards()
+        public IList<IWebElement> GetCards()
         {
-            
-            return checkoutCards;
+            return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions
+        .PresenceOfAllElementsLocatedBy(checkoutCards));
         }
 
-        [FindsBy(How = How.ClassName, Using = "btn-success")]
-        private IWebElement checkoutBtn;
-
-        public DeliveryPage checkout()
+        public IWebElement GetCheckoutBtn()
         {
-
-            checkoutBtn.Click();
-            return new DeliveryPage(driver);
+            return driver.FindElement(checkoutBtn);
         }
+
+        public DeliveryPage Checkout()
+        {
+            GetCheckoutBtn().Click();
+            var deliveryPage = new DeliveryPage(driver);
+            deliveryPage.WaitForPageToLoad(); 
+            return deliveryPage;
+        }
+
+
+
+       
 
     }
 }

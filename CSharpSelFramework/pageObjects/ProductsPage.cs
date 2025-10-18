@@ -1,72 +1,72 @@
-﻿using AngleSharp.Dom;
+﻿
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.PageObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SeleniumExtras.WaitHelpers;
+
 
 namespace CSharpSelFramework.pageObjects
 {
     public class ProductsPage
     {
         private IWebDriver driver;
+        private readonly WebDriverWait wait;
+
         By cardTitle = By.CssSelector(".card-title a");
-        By addToCart = By.CssSelector(".card-footer button");//tu dodajemy lokatory
+        By addToCart = By.CssSelector(".card-footer button");
+        By cards = By.TagName("app-card");
+        By checkout = By.PartialLinkText("Checkout");
 
 
-        //WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
-        //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible
-        //(By.PartialLinkText("Checkout")));
 
-        //IList<IWebElement> products = driver.FindElements(By.TagName("app-card"));
-        //By.CssSelector(".card-footer button"))
-        //By.PartialLinkText("Checkout")
-        public ProductsPage(IWebDriver driver) 
+        public ProductsPage(IWebDriver driver, int waitSecond= 10)
         {
-            this.driver = driver;  
-            PageFactory.InitElements(driver,this);
+            this.driver = driver;
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(waitSecond));
+
         }
 
-        [FindsBy(How= How.TagName, Using = "app-card")]
-        private IList<IWebElement> cards;
-
-
-        public IList<IWebElement> getCards()
+        public IList<IWebElement> GetCards()
         {
-            return cards;
+            return driver.FindElements(cards);
         }
 
 
-
-        [FindsBy(How = How.PartialLinkText, Using = "Checkout")]
-        private IWebElement checkoutButton;
-
-        public CheckoutPage chekout()
-        {
-            checkoutButton.Click();
-            return new CheckoutPage(driver);
-        }
-
-        public By getCardTitle()//by-> locator not I web element
-        {
-            return cardTitle;
-        }
-
-        public By addToCartButton()//by-> locator not I web element
+        public By AddToCartButton()
         {
             return addToCart;
         }
 
 
-
-        public void waitForCheckPageDisplay()
+        public IWebElement CheckoutButton()
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible
-            (By.PartialLinkText("Checkout")));
+            return wait.Until(ExpectedConditions.ElementToBeClickable(checkout));
+        }
+
+
+
+
+        public By GetCardTitle()
+        {
+            return cardTitle;
+        }
+
+
+
+
+        public CheckoutPage Checkout()
+        {
+            CheckoutButton().Click();
+            return new CheckoutPage(driver);
+        }
+
+
+
+
+        public void WaitForCheckPageDisplay()
+        {
+            
+            wait.Until(ExpectedConditions.ElementIsVisible
+            (checkout));
         }
 
 

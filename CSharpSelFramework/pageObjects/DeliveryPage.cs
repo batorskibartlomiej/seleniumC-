@@ -77,25 +77,12 @@ namespace CSharpSelFramework.pageObjects
             
         }
 
-
-       
-
-
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
+        public void WaitForPageToLoad()
+        {
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(country));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(checkbox));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(submitBtn));
+        }
     }
 
     
