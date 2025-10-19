@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selenium Learning", "Seleni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSelFramework", "CSharpSelFramework\CSharpSelFramework.csproj", "{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsGo", "LetsGo\LetsGo.csproj", "{FE761AC1-51BF-4A70-ADF2-FB8D2139C025}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37A18B15-3EEB-4CA0-9CA7-4A9B6ABDE9F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE761AC1-51BF-4A70-ADF2-FB8D2139C025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE761AC1-51BF-4A70-ADF2-FB8D2139C025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE761AC1-51BF-4A70-ADF2-FB8D2139C025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE761AC1-51BF-4A70-ADF2-FB8D2139C025}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
