@@ -3,6 +3,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Diagnostics.Contracts;
 using System.Drawing.Text;
 using System.Threading;
 
@@ -20,6 +21,7 @@ namespace LetsGo.pageObjects
         private By checkbox = By.XPath("//label[@for='terms']//input[@id='terms']");
         private By password = By.Id("password");
         private By signInBtn = By.Id("signInBtn");
+        private By wrongLoginAlert = By.XPath("//div[@class='alert alert-danger col-md-12']");
 
         public LoginPage(IWebDriver driver, int waitSecond = 10) 
         {
@@ -52,6 +54,13 @@ namespace LetsGo.pageObjects
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(signInBtn)).Click();
         }
 
+        public String GetAlertMsg()
+        {
+             return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(wrongLoginAlert)).Text;
+
+             //return driver.FindElement(wrongLoginAlert).Text;
+        }
+
 
         public void ValidLogin(string user, string pass)
         {
@@ -59,7 +68,7 @@ namespace LetsGo.pageObjects
             GetPassword().SendKeys(pass);
             ClickCheckbox();
             ClickSignInBtn();
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
             //return new ProductsPage(driver);
         }
 
